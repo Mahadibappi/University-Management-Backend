@@ -10,4 +10,18 @@ const createSemesterValidation = z.object({
     endMonth: z.enum([...months] as [string, ...string[]]),
   }),
 });
-export const semesterValidation = { createSemesterValidation };
+
+const updateSemesterValidation = z.object({
+  body: z.object({
+    name: z.enum([...semesterName] as [string, ...string[]]).optional(),
+    year: z.string().optional(),
+    code: z.enum([...semesterCode] as [string, ...string[]]).optional(),
+    startMonth: z.enum([...months] as [string, ...string[]]).optional(),
+    endMonth: z.enum([...months] as [string, ...string[]]).optional(),
+  }),
+});
+
+export const semesterValidation = {
+  createSemesterValidation,
+  updateSemesterValidation,
+};
