@@ -69,5 +69,10 @@ const studentSchema = new Schema<Student>({
   },
   localGuardian: { type: localGuardianSchema, required: true },
   profileImage: { type: String },
+  semester: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: "Semester",
+  },
 });
 export const studentModel = model<Student>("Student", studentSchema);

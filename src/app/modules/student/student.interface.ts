@@ -37,5 +37,6 @@ export interface Student {
   permanentAddress: string;
   guardian: Guardian;
   localGuardian: LocalGuardian;
+  semester: Types.ObjectId;
   profileImage?: string;
 }
