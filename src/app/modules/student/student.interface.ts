@@ -38,5 +38,6 @@ export interface Student {
   guardian: Guardian;
   localGuardian: LocalGuardian;
   semester: Types.ObjectId;
+  academicDepartment: Types.ObjectId;
   profileImage?: string;
 }

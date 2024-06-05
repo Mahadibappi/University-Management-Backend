@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-import { studentService } from "./student.service";
-import globalErrorHandler from "../../middlewares/globalErrorHandler";
+
 import httpStatus from "http-status";
 import sendResponse from "../../utils/sendResponse";
 import catchAsync from "../../utils/catchAsync";
+import { StudentServices } from "./student.service";
 
 const getAllStudents = catchAsync(async (req, res) => {
-  const result = await studentService.getAllStudentsFromDb();
+  const result = await StudentServices.getAllStudentsFromDB();
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -17,7 +17,7 @@ const getAllStudents = catchAsync(async (req, res) => {
 
 const getSingleStudent = catchAsync(async (req, res) => {
   const { studentId } = req.params;
-  const result = await studentService.getSingleStudent(studentId);
+  const result = await StudentServices.getSingleStudentFromDB(studentId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -29,7 +29,7 @@ const getSingleStudent = catchAsync(async (req, res) => {
 
 const deleteStudent = catchAsync(async (req, res) => {
   const { studentId } = req.params;
-  const result = await studentService.deleteStudent(studentId);
+  const result = await StudentServices.deleteStudentFromDB(studentId);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -38,8 +38,22 @@ const deleteStudent = catchAsync(async (req, res) => {
   });
 });
 
+const updateStudent = catchAsync(async (req, res) => {
+  const { studentId } = req.params;
+  const { student } = req.body;
+  const result = await StudentServices.updateStudentIntoDB(studentId, student);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Student is updated successfully",
+    data: result,
+  });
+});
+
 export const StudentController = {
   getAllStudents,
   getSingleStudent,
   deleteStudent,
+  updateStudent,
 };

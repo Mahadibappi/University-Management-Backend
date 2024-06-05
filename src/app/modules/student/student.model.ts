@@ -74,5 +74,9 @@ const studentSchema = new Schema<Student>({
     required: true,
     ref: "Semester",
   },
+  academicDepartment: {
+    type: Schema.Types.ObjectId,
+    ref: "AcademicDepartment",
+  },
 });
 export const studentModel = model<Student>("Student", studentSchema);
