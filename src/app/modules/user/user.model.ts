@@ -1,4 +1,4 @@
-import { User } from "./user.interface";
+import { User, passwordModel } from "./user.interface";
 import { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
 import config from "../../config";
@@ -12,6 +12,9 @@ const userSchema = new Schema<User>(
       type: String,
       enum: ["in-progress", "blocked"],
       default: "in-progress",
+    },
+    passwordChangedAt: {
+      type: Date,
     },
     isDeleted: {
       type: Boolean,
@@ -33,4 +36,24 @@ userSchema.post("save", function (doc, next) {
   doc.password = "";
   next();
 });
-export const userModel = model<User>("User", userSchema);
+userSchema.statics.isUserExistsByCustomId = async function (id: string) {
+  return await userModel.findOne({ id }).select("+password");
+};
+
+userSchema.statics.isPasswordMatched = async function (
+  plainTextPassword,
+  hashedPassword
+) {
+  return await bcrypt.compare(plainTextPassword, hashedPassword);
+};
+
+userSchema.statics.isJWTIssuedBeforePasswordChanged = function (
+  passwordChangedTimestamp: Date,
+  jwtIssuedTimestamp: number
+) {
+  const passwordChangedTime =
+    new Date(passwordChangedTimestamp).getTime() / 1000;
+  return passwordChangedTime > jwtIssuedTimestamp;
+};
+
+export const userModel = model<User, passwordModel>("User", userSchema);
